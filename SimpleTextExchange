@@ -1,0 +1,28 @@
+pragma solidity ^0.8.0;
+
+contract SimpleTextExchange {
+    struct TextMessage {
+        address sender;
+        string content;
+    }
+
+    mapping(uint256 => TextMessage) private messages;
+    uint256 private messageCounter;
+
+    event TextMessageSent(uint256 indexed messageId, address indexed sender, string content);
+
+    function sendMessage(string memory _content) public {
+        messages[messageCounter] = TextMessage(msg.sender, _content);
+        emit TextMessageSent(messageCounter, msg.sender, _content);
+        messageCounter++;
+    }
+
+    function getMessage(uint256 _messageId) public view returns (address sender, string memory content) {
+        TextMessage storage message = messages[_messageId];
+        return (message.sender, message.content);
+    }
+
+    function getMessageCount() public view returns (uint256) {
+        return messageCounter;
+    }
+}
